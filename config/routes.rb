@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
-  get 'students/index'
+  get 'students'		=> 'students#index'								# Student Index (Show All Students)
+  get 'students/:id'	=> 'students#show', as: 'student', id: /\d+/ 	# Student Show (Show a Student)
 
-  get 'students/show'
-
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  
 end
