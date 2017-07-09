@@ -1,10 +1,12 @@
 <h2>All Students</h2>
 
+<p>style #1</p>
 <% @students.each do |student| %>
-	<div class='student'>
-		<p>
-			<strong>Name : </strong> <%= link_to student.name, student_path(student) %>
-			- <%= link_to 'Show (Magic Style)', student %>
-		</p>
-	</div>
+<%= render partial: 'student', object: student %>
 <% end %>
+
+<p>style #2</p>
+<%= render partial: 'student', collection: @students %>
+
+<p>style #2 (Short Form)</p>
+<%= render @students %>

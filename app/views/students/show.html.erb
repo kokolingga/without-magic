@@ -1,11 +1,10 @@
 <h2>Student Information</h2>
 
+<p>style #1</p>
+<%= render partial: 'student', object: @student %>
 
-<div class='student'>
-	<p>
-		<strong>Name : </strong> <%= @student.name %>
-	</p>
-</div>
+<p>style #1 (Short Form)</p>
+<%= render @student %>
 
 <p>
 	<%= link_to 'Back to All Students', students_path %>
