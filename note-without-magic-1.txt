@@ -1,0 +1,139 @@
+note without-magic-1
+-----------------------------------------
+
+rails new without-magic
+
+rails s
+
+# buat branch, agar tidak ganggu master
+git checkout -b creating-student-model
+
+<< 00:06:39 >>
+
+rails g model Student name:string
+
+rails db:migrate
+	
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	git commit -m "created the Student model and migrated the students table."
+	<< 00:10:56 >>
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+git checkout master
+git merge creating-student-model
+
+rails c
+
+Student.create(name: 'Wally Glutton')
+Student.count
+Student.create(name: 'Daisy Glutton')
+
+<< 00:15:22 >>
+
+reload!		# di rails c
+
+# tambahkan validasi di model, tapi belum di-reload
+Student.create 	#bisa
+
+reload!
+
+Student.create 	#error
+Student.last.destroy
+
+Student.all
+
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	git commit -m "Added a name presence validation to the Student model."
+	<< 00:19:10 >>
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+# member action (will require an id) 
+	=> ex: show
+# collection action 
+	=> ex: index
+
+rails g controller students index show
+
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	git commit -m "Added a new student controller."
+	<< 00:20:50 >>
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+*) 2017-07-02
+<< 00:29:02 >>
+# ubah routing
+# give route a name, used in views to build link
+
++  get 'students'		=> 'students#index'								# Student Index (Show All Students)
++  get 'students/:id'	=> 'students#show', as: 'student', id: /\d+/ 	# Student Show (Show a Student)
+
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	git commit -m "Wired up the index and show routes"
+	<< 00:33:00 >>
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+(StudentsController)
+def index
+	@students = Student.order(:name) # Load all students ordered by name.
+	#Automatically load the app/views/students/index.html.erb
+end
+
+def show
+	@student = Student.find(params[:id]) # Load student mentioned by id in the route.
+	#Automatically load the app/views/students/show.html.erb
+end
+
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	git commit -m "We now have a working index and show action with associated views."
+	<< 00:48:51 >>
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+menambahkan link_to menggunakan "named link" (dari routes)
+
+index.html.erb
+<strong>Name : </strong> 
+<%= link_to student.name, student_path(student) %>
+<%= link_to 'Show (Magic Style)', student %>
+
+show.html.erb
+<%= link_to 'Back to All Students', students_path %>
+
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	git commit -m "Navigation links between the show and index views."
+	<< 00:59:39 >>
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+<< 01:08:05 >>
+<< 01:08:40 >>
+<< 01:09:20 >>
+
+<p>style #1</p>
+<% @students.each do |student| %>
+	<%= render partial: 'student', object: student %>
+<% end %>
+
+<p>style #2 (render partial with collection object</p>
+<%= render partial: 'student', collection: @students %>
+
+<p>style #2 (Short Form)</p>
+<%= render @students %>
+
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	git commit -m "Extracted the student ERB into a partial"
+	<< 01:12:16 >>
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	git commit -m "Created a partial for the layout header."
+	<< 01:18:32 >>
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+*) 2017-07-12
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	git commit -m "Added some styling to a new main.scss file"
+	<< 01:25:20 >>
+	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
++ PART #1 - DONE +
